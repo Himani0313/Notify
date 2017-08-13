@@ -1,13 +1,16 @@
-package com.example.himanishah.notify.Model;
+package com.example.himanishah.notify.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.himanishah.notify.DetailActivity;
 import com.example.himanishah.notify.R;
 
 import java.util.ArrayList;
@@ -36,7 +39,10 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
         mNotes.add(editTextInput);
         notifyDataSetChanged();
     }
-
+    public void updateData(String editTextInput,int position) {
+        mNotes.add(position,editTextInput);
+        notifyDataSetChanged();
+    }
     @Override
     public int getItemCount() {
         return mNotes.size();
@@ -61,16 +67,29 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
         final String notes = mNotes.get(position);
         holder.rowId.setText(notes.toString());
         Log.d("NoteAdapter", "Bind success!");
+        holder.rowLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(mContext, "Clicked on " + notes, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, DetailActivity.class);
+                intent.putExtra("name", notes);
+                intent.putExtra("position", position);
+                mContext.startActivity(intent);
+            }
+        });
 
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
+        public LinearLayout rowLayout;
         public TextView rowId;
 
         public ViewHolder(View v) {
             super(v);
             rowId = (TextView) v.findViewById(R.id.row_id);
+            rowLayout = (LinearLayout)v.findViewById(R.id.row_layout);
         }
     }
+
 }
